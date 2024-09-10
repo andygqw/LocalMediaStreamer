@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     ThemeProvider,
     createTheme,
@@ -25,9 +25,9 @@ function App() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
+    const fetchData = useCallback(async (path) => {
 
-        const params = new URLSearchParams({ path: currentPath });
+        const params = new URLSearchParams({ path });
 
         fetch('http://localhost:8080/browse?' + params.toString())
             .then((response) => {
@@ -45,7 +45,13 @@ function App() {
             .finally(() => {
                 setLoading(false);
             });
-    }, [currentPath]);
+    }, []);
+
+    useEffect(() => {
+
+        fetchData(currentPath);
+
+    }, [currentPath, fetchData]);
 
     // Toggle theme between light and dark mode
     const handleThemeChange = () => {
@@ -64,10 +70,9 @@ function App() {
         return parts[parts.length - 1];
     };
 
-    // Handle folder click to change path (mock implementation)
-    const handleFolderClick = (folder) => {
-        // Update current path or load folder content logic goes here
-        setCurrentPath(folder);
+    const handleFolderClick = (folderName) => {
+        setCurrentPath(folderName);
+        fetchData(folderName);
     };
 
     return (
