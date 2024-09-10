@@ -72,13 +72,14 @@ function App() {
     };
 
     const handleFolderClick = (folderName) => {
-        setCurrentPath((prevPath) => `${prevPath}${folderName}/`);
+        //setCurrentPath((prevPath) => `${prevPath}${folderName}/`);
+        setCurrentPath(folderName);
     };
 
     const pathParts = currentPath.split('/').filter(Boolean);
 
     const handleBreadcrumbClick = (index) => {
-        const newPath = pathParts.slice(0, index + 1).join('/') + '/';
+        const newPath = '/' + pathParts.slice(0, index + 1).join('/') + '/';
         setCurrentPath(newPath);
     };
 
@@ -99,6 +100,8 @@ function App() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                minHeight: '80vh',
+                flexDirection: 'column',
             }}>
                 {loading ? (
                     <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
