@@ -16,6 +16,7 @@ import {
     Link
 } from '@mui/material';
 import { Folder, InsertDriveFile } from '@mui/icons-material';
+import MediaPlayer from "./component/MediaPlayer";
 
 function App() {
     const [darkMode, setDarkMode] = useState(() =>
@@ -24,6 +25,8 @@ function App() {
 
     const [data, setData] = useState(null);
     const [currentPath, setCurrentPath] = useState('');
+    const [isPlayer, setIsPlayer] = useState(false);
+    const [currentFile, setCurrentFile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -72,8 +75,12 @@ function App() {
     };
 
     const handleFolderClick = (folderName) => {
-        //setCurrentPath((prevPath) => `${prevPath}${folderName}/`);
         setCurrentPath(folderName);
+    };
+
+    const handleFileClick = (filePath) => {
+        setCurrentFile(filePath);
+        setIsPlayer(true);
     };
 
     const pathParts = currentPath.split('/').filter(Boolean);
@@ -96,12 +103,12 @@ function App() {
             </AppBar>
 
             <Container sx={{
-                boxShadow: {xs: 0, sm: 5},
+                boxShadow: { xs: 0, sm: 5 },
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '80vh',
-                flexDirection: 'column',
+                flexDirection: 'row',
             }}>
                 {loading ? (
                     <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
@@ -112,7 +119,7 @@ function App() {
                 ) : data === null || (data.files?.length === 0 && data.directories?.length === 0) ? (
                     <Typography variant="body1" align="center">No resources available.</Typography>
                 ) : (
-                    <>
+                    <Box sx={{ flexDirection:'column', }}>
                         {/* Breadcrumb Navigation */}
                         {pathParts.length > 0 && (
                             <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: 1 }}>
@@ -150,20 +157,19 @@ function App() {
                         >
                             {/* File List */}
                             {data.files?.map((file) => (
-                                <ListItem key={file.key} sx={{ display: 'flex', alignItems: 'center' }}>
+                                <ListItem key={file.fileName} onClick={() => handleFileClick(file.filePath)} sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                }}>
                                     <IconButton edge="start" color="secondary">
                                         <InsertDriveFile />
                                     </IconButton>
                                     <ListItemText
                                         primary={
-                                            <a
-                                                href={file.url}
-                                                rel="noopener noreferrer"
-                                                download
-                                                style={{ color: theme.palette.text.primary, wordWrap: 'break-word' }}
-                                            >
+                                            <Typography style={{ color: theme.palette.text.primary, wordWrap: 'break-word' }}>
                                                 {file.fileName}
-                                            </a>
+                                            </Typography>
                                         }
                                         secondary={file.filePath}
                                     />
@@ -172,7 +178,9 @@ function App() {
 
                             {/* Folder List */}
                             {data.directories?.map((folder) => (
-                                <ListItem button key={folder} onClick={() => handleFolderClick(folder)}>
+                                <ListItem button key={folder} onClick={() => handleFolderClick(folder)} sx={{
+                                    cursor: 'pointer',
+                                }}>
                                     <IconButton edge="start" color="primary">
                                         <Folder />
                                     </IconButton>
@@ -186,7 +194,17 @@ function App() {
                                 </ListItem>
                             ))}
                         </List>
-                    </>
+                    </Box>
+                )}
+
+                {/* Media Player */}
+                {isPlayer && currentFile && (
+                    <Container>
+                        <Typography variant="h3" align="center" gutterBottom>
+                            {getFolderName(currentFile)}
+                        </Typography>
+                        <MediaPlayer mediaFiles={currentFile} />
+                    </Container>
                 )}
             </Container>
         </ThemeProvider>
