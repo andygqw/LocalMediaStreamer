@@ -103,7 +103,6 @@ function App() {
             </AppBar>
 
             <Container sx={{
-                boxShadow: { xs: 0, sm: 5 },
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
