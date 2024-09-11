@@ -200,7 +200,7 @@ function App() {
                 {/* Media Player */}
                 {isPlayer && currentFile && (
                     <Container>
-                        <Typography variant="h3" align="center" gutterBottom>
+                        <Typography variant="h5" align="center" gutterBottom>
                             {getFolderName(currentFile)}
                         </Typography>
                         <MediaPlayer mediaFiles={currentFile} />

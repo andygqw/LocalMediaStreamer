@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
-import { Viewer as PDFViewer } from '@react-pdf-viewer/core';
+import { Worker, Viewer as PDFViewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import {Card, CardContent, getTableSortLabelUtilityClass, Typography} from '@mui/material';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 
 const MediaPlayer = ({ mediaFiles }) => {
+
+    const BASE_URL = "http://localhost:8080/media";
+    const VIDEO_URL = "/video?filename=";
+    const AUDIO_URL = "/audio?filename=";
+    const PDF_URL = "/pdf?filename=";
 
     const inferMediaType = (fileName) => {
         const extension = fileName.split('.').pop().toLowerCase();
@@ -31,7 +36,7 @@ const MediaPlayer = ({ mediaFiles }) => {
             case 'video':
                 return (
                     <ReactPlayer
-                        url={file}
+                        url={BASE_URL + VIDEO_URL + file}
                         width='100%'
                         controls={true}
                     />
@@ -39,15 +44,17 @@ const MediaPlayer = ({ mediaFiles }) => {
             case 'audio':
                 return (
                     <ReactPlayer
-                        url={file}
+                        url={BASE_URL + AUDIO_URL + file}
                         width='100%'
                         controls
                     />
                 );
             case 'pdf':
                 return (
-                    <div style={{ height: '500px' }}>
-                        <PDFViewer fileUrl={file} />
+                    <div style={{ maxHeight: '700px', overflow: 'auto' }}>
+                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                            <PDFViewer fileUrl={BASE_URL + PDF_URL + file} />
+                        </Worker>
                     </div>
                 );
             case 'image':
