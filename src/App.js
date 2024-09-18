@@ -33,7 +33,7 @@ function App() {
     const fetchData = useCallback(async (path) => {
         const params = new URLSearchParams({ path });
 
-        fetch('http://localhost:8080/browse?' + params.toString())
+        fetch('http://10.0.0.87:8080/browse?' + params.toString())
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(response.statusText);
@@ -107,7 +107,7 @@ function App() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '80vh',
-                flexDirection: 'row',
+                flexDirection: {xs: 'column', md: 'row'},
             }}>
                 {loading ? (
                     <Box display="flex" justifyContent="center" alignItems="center" height="80vh">

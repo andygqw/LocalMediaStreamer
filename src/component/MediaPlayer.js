@@ -39,6 +39,9 @@ const MediaPlayer = ({ mediaFiles }) => {
                         url={BASE_URL + VIDEO_URL + file}
                         width='100%'
                         controls={true}
+                        muted={true}
+                        playsinline={true}
+                        autoplay={true}
                     />
                 );
             case 'audio':
